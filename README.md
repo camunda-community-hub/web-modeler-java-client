@@ -10,7 +10,7 @@ Add depdency to Maven pom.xml:
 ```xml
   <dependency>
     <groupId>org.camunda.community.webmodeler</groupId>
-    <artifactId>web-modeler-java-client-root</artifactId>
+    <artifactId>web-modeler-openapi-springboot</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </dependency>
 ```
