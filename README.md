@@ -1,2 +1,39 @@
 # web-modeler-java-client
 Java Client for the Web Modeler (based on its OpenAPI spec from https://docs.camunda.io/docs/next/apis-tools/web-modeler-api/)
+
+## How to use
+
+In Spring Boot
+
+Add depdency to Maven pom.xml:
+
+```xml
+  <dependency>
+    <groupId>org.camunda.community.webmodeler</groupId>
+    <artifactId>web-modeler-java-client-root</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </dependency>
+```
+
+Add `application.properties`:
+
+```properties
+camunda.modeler.client.clientId=WlMOFLRL1sOmZpR9
+camunda.modeler.client.clientSecret=1vRRGPfoMbHBcrUZgbaQG0g1j0p~2hTF
+
+camunda.modeler.client.baseUrl=https://api.cloud.camunda.io
+camunda.modeler.client.oauthUrl=https://login.cloud.camunda.io/oauth/token
+camunda.modeler.client.oauthAudience=api.cloud.camunda.io
+```
+
+Now you can just inject the API:
+
+```java
+    @Autowired
+    private CamundaWebModelerApi camundaWebModelerApi;
+
+    public void printProjects() {
+        System.out.println(
+                camundaWebModelerApi.projectsApi().listProjects());
+    }
+```
