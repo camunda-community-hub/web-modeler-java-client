@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+org.camunda.community.webmodeler.client.springboot.CamundaWebModelerClientStarter,\
+org.camunda.community.webmodeler.client.springboot.CamundaWebModelerApi
