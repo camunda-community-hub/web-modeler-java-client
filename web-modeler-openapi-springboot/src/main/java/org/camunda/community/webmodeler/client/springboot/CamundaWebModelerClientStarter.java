@@ -26,6 +26,11 @@ public class CamundaWebModelerClientStarter {
     private AuthInterface authInterface;
 
     @Bean
+    public CamundaWebModelerApi createCamundaWebModelerApi(ApiClient client) {
+        return new CamundaWebModelerApi(client);
+    }
+
+    @Bean
     public ApiClient createApiClient() {
         ApiClient client = new ApiClient();
         //

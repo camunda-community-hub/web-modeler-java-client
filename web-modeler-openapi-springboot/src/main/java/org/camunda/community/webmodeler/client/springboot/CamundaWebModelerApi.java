@@ -11,11 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
 public class CamundaWebModelerApi {
 
-    @Autowired
     private ApiClient apiClient;
+
+    @Autowired
+    public CamundaWebModelerApi(ApiClient apiClient) {
+        this.apiClient = apiClient;
+    }
 
     @Bean
     public FilesApi filesApi() {
