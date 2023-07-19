@@ -8,7 +8,7 @@
   </parent>
 
   <groupId>org.camunda.community.webmodeler</groupId>
-  <artifactId>web-modeler-java-client-root</artifactId>
+  <artifactId>web-modeler-openapi-root</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
 
@@ -32,6 +32,7 @@
   <modules>
     <module>web-modeler-openapi-java-client</module>
     <module>web-modeler-openapi-springboot</module>
+    <module>web-modeler-openapi-cli</module>
   </modules>
 
 </project>
