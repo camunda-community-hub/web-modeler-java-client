@@ -2,51 +2,63 @@
 
 All URIs are relative to *https://modeler.cloud.camunda.io*
 
-|                      Method                       |               HTTP request                | Description |
-|---------------------------------------------------|-------------------------------------------|-------------|
-| [**createProject**](ProjectsApi.md#createProject) | **POST** /api/beta/projects               |
-| [**deleteProject**](ProjectsApi.md#deleteProject) | **DELETE** /api/beta/projects/{projectId} |
-| [**getProject**](ProjectsApi.md#getProject)       | **GET** /api/beta/projects/{projectId}    |
-| [**listProjects**](ProjectsApi.md#listProjects)   | **GET** /api/beta/projects                |
-| [**updateProject**](ProjectsApi.md#updateProject) | **PATCH** /api/beta/projects/{projectId}  |
+|                       Method                        |              HTTP request               | Description |
+|-----------------------------------------------------|-----------------------------------------|-------------|
+| [**createProject**](ProjectsApi.md#createProject)   | **POST** /api/v1/projects               |             |
+| [**deleteProject**](ProjectsApi.md#deleteProject)   | **DELETE** /api/v1/projects/{projectId} |             |
+| [**getProject**](ProjectsApi.md#getProject)         | **GET** /api/v1/projects/{projectId}    |             |
+| [**searchProjects**](ProjectsApi.md#searchProjects) | **POST** /api/v1/projects/search        |             |
+| [**updateProject**](ProjectsApi.md#updateProject)   | **PATCH** /api/v1/projects/{projectId}  |             |
 
 <a name="createProject"></a>
 
 # **createProject**
 
-> ProjectMetadataDto createProject(body)
+> ProjectMetadataDto createProject(createProjectDto)
 
-Creates a new project. This project will be created without any collaborators, so it will by default not be visible. To assign collaborators, the org owner can enable super-user mode and assign collaborators to it.
+Creates a new project. This project will be created without any collaborators, so it will not be visible in the UI by default. To assign collaborators, use `PUT /api/v1/collaborators`.
 
 ### Example
 
 ```java
 // Import classes:
-//import io.swagger.client.ApiClient;
-//import io.swagger.client.ApiException;
-//import io.swagger.client.Configuration;
-//import io.swagger.client.auth.*;
-//import io.swagger.client.api.ProjectsApi;
+import org.camunda.community.webmodeler.client.invoker.ApiClient;
+import org.camunda.community.webmodeler.client.invoker.ApiException;
+import org.camunda.community.webmodeler.client.invoker.Configuration;
+import org.camunda.community.webmodeler.client.invoker.auth.*;
+import org.camunda.community.webmodeler.client.invoker.models.*;
+import org.camunda.community.webmodeler.client.api.ProjectsApi;
 
-ApiClient defaultClient = Configuration.getDefaultApiClient();
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://modeler.cloud.camunda.io");
+    
+    // Configure HTTP bearer authorization: Bearer
+    HttpBearerAuth Bearer = (HttpBearerAuth) defaultClient.getAuthentication("Bearer");
+    Bearer.setBearerToken("BEARER TOKEN");
 
-
-ProjectsApi apiInstance = new ProjectsApi();
-CreateProjectDto body = new CreateProjectDto(); // CreateProjectDto | 
-try {
-    ProjectMetadataDto result = apiInstance.createProject(body);
-    System.out.println(result);
-} catch (ApiException e) {
-    System.err.println("Exception when calling ProjectsApi#createProject");
-    e.printStackTrace();
+    ProjectsApi apiInstance = new ProjectsApi(defaultClient);
+    CreateProjectDto createProjectDto = new CreateProjectDto(); // CreateProjectDto | 
+    try {
+      ProjectMetadataDto result = apiInstance.createProject(createProjectDto);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling ProjectsApi#createProject");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
 }
 ```
 
 ### Parameters
 
-|   Name   |                    Type                     | Description | Notes |
-|----------|---------------------------------------------|-------------|-------|
-| **body** | [**CreateProjectDto**](CreateProjectDto.md) |             |
+|         Name         |                    Type                     | Description | Notes |
+|----------------------|---------------------------------------------|-------------|-------|
+| **createProjectDto** | [**CreateProjectDto**](CreateProjectDto.md) |             |       |
 
 ### Return type
 
@@ -61,34 +73,55 @@ try {
 - **Content-Type**: application/json
 - **Accept**: application/json
 
+### HTTP response details
+
+| Status code |      Description      | Response headers |
+|-------------|-----------------------|------------------|
+| **200**     | OK                    | -                |
+| **400**     | Bad Request           | -                |
+| **404**     | Not Found             | -                |
+| **500**     | Internal Server Error | -                |
+
 <a name="deleteProject"></a>
 
 # **deleteProject**
 
 > deleteProject(projectId)
 
-Deletion of resources is recursive and cannot be undone.
+This endpoint deletes an empty project. A project is considered empty if there are no files in it. Deletion of resources is recursive and cannot be undone.
 
 ### Example
 
 ```java
 // Import classes:
-//import io.swagger.client.ApiClient;
-//import io.swagger.client.ApiException;
-//import io.swagger.client.Configuration;
-//import io.swagger.client.auth.*;
-//import io.swagger.client.api.ProjectsApi;
+import org.camunda.community.webmodeler.client.invoker.ApiClient;
+import org.camunda.community.webmodeler.client.invoker.ApiException;
+import org.camunda.community.webmodeler.client.invoker.Configuration;
+import org.camunda.community.webmodeler.client.invoker.auth.*;
+import org.camunda.community.webmodeler.client.invoker.models.*;
+import org.camunda.community.webmodeler.client.api.ProjectsApi;
 
-ApiClient defaultClient = Configuration.getDefaultApiClient();
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://modeler.cloud.camunda.io");
+    
+    // Configure HTTP bearer authorization: Bearer
+    HttpBearerAuth Bearer = (HttpBearerAuth) defaultClient.getAuthentication("Bearer");
+    Bearer.setBearerToken("BEARER TOKEN");
 
-
-ProjectsApi apiInstance = new ProjectsApi();
-UUID projectId = new UUID(); // UUID | 
-try {
-    apiInstance.deleteProject(projectId);
-} catch (ApiException e) {
-    System.err.println("Exception when calling ProjectsApi#deleteProject");
-    e.printStackTrace();
+    ProjectsApi apiInstance = new ProjectsApi(defaultClient);
+    UUID projectId = new UUID(); // UUID | 
+    try {
+      apiInstance.deleteProject(projectId);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling ProjectsApi#deleteProject");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
 }
 ```
 
@@ -96,7 +129,7 @@ try {
 
 |     Name      |      Type       | Description | Notes |
 |---------------|-----------------|-------------|-------|
-| **projectId** | [**UUID**](.md) |             |
+| **projectId** | [**UUID**](.md) |             |       |
 
 ### Return type
 
@@ -111,6 +144,14 @@ null (empty response body)
 - **Content-Type**: Not defined
 - **Accept**: application/json
 
+### HTTP response details
+
+| Status code |      Description      | Response headers |
+|-------------|-----------------------|------------------|
+| **204**     | No Content            | -                |
+| **404**     | Not Found             | -                |
+| **500**     | Internal Server Error | -                |
+
 <a name="getProject"></a>
 
 # **getProject**
@@ -121,23 +162,35 @@ null (empty response body)
 
 ```java
 // Import classes:
-//import io.swagger.client.ApiClient;
-//import io.swagger.client.ApiException;
-//import io.swagger.client.Configuration;
-//import io.swagger.client.auth.*;
-//import io.swagger.client.api.ProjectsApi;
+import org.camunda.community.webmodeler.client.invoker.ApiClient;
+import org.camunda.community.webmodeler.client.invoker.ApiException;
+import org.camunda.community.webmodeler.client.invoker.Configuration;
+import org.camunda.community.webmodeler.client.invoker.auth.*;
+import org.camunda.community.webmodeler.client.invoker.models.*;
+import org.camunda.community.webmodeler.client.api.ProjectsApi;
 
-ApiClient defaultClient = Configuration.getDefaultApiClient();
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://modeler.cloud.camunda.io");
+    
+    // Configure HTTP bearer authorization: Bearer
+    HttpBearerAuth Bearer = (HttpBearerAuth) defaultClient.getAuthentication("Bearer");
+    Bearer.setBearerToken("BEARER TOKEN");
 
-
-ProjectsApi apiInstance = new ProjectsApi();
-UUID projectId = new UUID(); // UUID | 
-try {
-    ProjectDto result = apiInstance.getProject(projectId);
-    System.out.println(result);
-} catch (ApiException e) {
-    System.err.println("Exception when calling ProjectsApi#getProject");
-    e.printStackTrace();
+    ProjectsApi apiInstance = new ProjectsApi(defaultClient);
+    UUID projectId = new UUID(); // UUID | 
+    try {
+      ProjectDto result = apiInstance.getProject(projectId);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling ProjectsApi#getProject");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
 }
 ```
 
@@ -145,7 +198,7 @@ try {
 
 |     Name      |      Type       | Description | Notes |
 |---------------|-----------------|-------------|-------|
-| **projectId** | [**UUID**](.md) |             |
+| **projectId** | [**UUID**](.md) |             |       |
 
 ### Return type
 
@@ -160,42 +213,84 @@ try {
 - **Content-Type**: Not defined
 - **Accept**: application/json
 
-<a name="listProjects"></a>
+### HTTP response details
 
-# **listProjects**
+| Status code |      Description      | Response headers |
+|-------------|-----------------------|------------------|
+| **200**     | OK                    | -                |
+| **404**     | Not Found             | -                |
+| **500**     | Internal Server Error | -                |
 
-> List&lt;ProjectMetadataDto&gt; listProjects()
+<a name="searchProjects"></a>
+
+# **searchProjects**
+
+> PubSearchResultDtoProjectMetadataDto searchProjects(pubSearchDtoProjectMetadataDto)
+
+Searches for projects.
+* *filter* specifies which fields should match. Only items that match the given fields will be returned.
+**Note:** Date fields need to be specified in a format compatible with `java.time.ZonedDateTime`; for example `2023-09-20T11:31:20.206801604Z`.
+You can use suffixes to match date ranges:
+
+| Modifier |   Description   |
+|----------|-----------------|
+| \|\|/y   | Within a year   |
+| \|\|/M   | Within a month  |
+| \|\|/w   | Within a week   |
+| \|\|/d   | Within a day    |
+| \|\|/h   | Within an hour  |
+| \|\|/m   | Within a minute |
+| \|\|/s   | Within a second |
+
+* *sort* specifies by which fields and direction (`ASC`/`DESC`) the result should be sorted.
+* *page* specifies the page number to return.
+* *size* specifies the number of items per page. The default value is 10.
 
 ### Example
 
 ```java
 // Import classes:
-//import io.swagger.client.ApiClient;
-//import io.swagger.client.ApiException;
-//import io.swagger.client.Configuration;
-//import io.swagger.client.auth.*;
-//import io.swagger.client.api.ProjectsApi;
+import org.camunda.community.webmodeler.client.invoker.ApiClient;
+import org.camunda.community.webmodeler.client.invoker.ApiException;
+import org.camunda.community.webmodeler.client.invoker.Configuration;
+import org.camunda.community.webmodeler.client.invoker.auth.*;
+import org.camunda.community.webmodeler.client.invoker.models.*;
+import org.camunda.community.webmodeler.client.api.ProjectsApi;
 
-ApiClient defaultClient = Configuration.getDefaultApiClient();
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://modeler.cloud.camunda.io");
+    
+    // Configure HTTP bearer authorization: Bearer
+    HttpBearerAuth Bearer = (HttpBearerAuth) defaultClient.getAuthentication("Bearer");
+    Bearer.setBearerToken("BEARER TOKEN");
 
-
-ProjectsApi apiInstance = new ProjectsApi();
-try {
-    List<ProjectMetadataDto> result = apiInstance.listProjects();
-    System.out.println(result);
-} catch (ApiException e) {
-    System.err.println("Exception when calling ProjectsApi#listProjects");
-    e.printStackTrace();
+    ProjectsApi apiInstance = new ProjectsApi(defaultClient);
+    PubSearchDtoProjectMetadataDto pubSearchDtoProjectMetadataDto = new PubSearchDtoProjectMetadataDto(); // PubSearchDtoProjectMetadataDto | 
+    try {
+      PubSearchResultDtoProjectMetadataDto result = apiInstance.searchProjects(pubSearchDtoProjectMetadataDto);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling ProjectsApi#searchProjects");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
 }
 ```
 
 ### Parameters
 
-This endpoint does not need any parameter.
+|                Name                |                                  Type                                   | Description | Notes |
+|------------------------------------|-------------------------------------------------------------------------|-------------|-------|
+| **pubSearchDtoProjectMetadataDto** | [**PubSearchDtoProjectMetadataDto**](PubSearchDtoProjectMetadataDto.md) |             |       |
 
 ### Return type
 
-[**List&lt;ProjectMetadataDto&gt;**](ProjectMetadataDto.md)
+[**PubSearchResultDtoProjectMetadataDto**](PubSearchResultDtoProjectMetadataDto.md)
 
 ### Authorization
 
@@ -203,46 +298,67 @@ This endpoint does not need any parameter.
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
+- **Content-Type**: application/json
 - **Accept**: application/json
+
+### HTTP response details
+
+| Status code |      Description      | Response headers |
+|-------------|-----------------------|------------------|
+| **200**     | OK                    | -                |
+| **400**     | Bad Request           | -                |
+| **404**     | Not Found             | -                |
+| **500**     | Internal Server Error | -                |
 
 <a name="updateProject"></a>
 
 # **updateProject**
 
-> ProjectMetadataDto updateProject(body, projectId)
+> ProjectMetadataDto updateProject(projectId, updateProjectDto)
 
 ### Example
 
 ```java
 // Import classes:
-//import io.swagger.client.ApiClient;
-//import io.swagger.client.ApiException;
-//import io.swagger.client.Configuration;
-//import io.swagger.client.auth.*;
-//import io.swagger.client.api.ProjectsApi;
+import org.camunda.community.webmodeler.client.invoker.ApiClient;
+import org.camunda.community.webmodeler.client.invoker.ApiException;
+import org.camunda.community.webmodeler.client.invoker.Configuration;
+import org.camunda.community.webmodeler.client.invoker.auth.*;
+import org.camunda.community.webmodeler.client.invoker.models.*;
+import org.camunda.community.webmodeler.client.api.ProjectsApi;
 
-ApiClient defaultClient = Configuration.getDefaultApiClient();
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://modeler.cloud.camunda.io");
+    
+    // Configure HTTP bearer authorization: Bearer
+    HttpBearerAuth Bearer = (HttpBearerAuth) defaultClient.getAuthentication("Bearer");
+    Bearer.setBearerToken("BEARER TOKEN");
 
-
-ProjectsApi apiInstance = new ProjectsApi();
-UpdateProjectDto body = new UpdateProjectDto(); // UpdateProjectDto | 
-UUID projectId = new UUID(); // UUID | 
-try {
-    ProjectMetadataDto result = apiInstance.updateProject(body, projectId);
-    System.out.println(result);
-} catch (ApiException e) {
-    System.err.println("Exception when calling ProjectsApi#updateProject");
-    e.printStackTrace();
+    ProjectsApi apiInstance = new ProjectsApi(defaultClient);
+    UUID projectId = new UUID(); // UUID | 
+    UpdateProjectDto updateProjectDto = new UpdateProjectDto(); // UpdateProjectDto | 
+    try {
+      ProjectMetadataDto result = apiInstance.updateProject(projectId, updateProjectDto);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling ProjectsApi#updateProject");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
 }
 ```
 
 ### Parameters
 
-|     Name      |                    Type                     | Description | Notes |
-|---------------|---------------------------------------------|-------------|-------|
-| **body**      | [**UpdateProjectDto**](UpdateProjectDto.md) |             |
-| **projectId** | [**UUID**](.md)                             |             |
+|         Name         |                    Type                     | Description | Notes |
+|----------------------|---------------------------------------------|-------------|-------|
+| **projectId**        | [**UUID**](.md)                             |             |       |
+| **updateProjectDto** | [**UpdateProjectDto**](UpdateProjectDto.md) |             |       |
 
 ### Return type
 
@@ -256,4 +372,13 @@ try {
 
 - **Content-Type**: application/json
 - **Accept**: application/json
+
+### HTTP response details
+
+| Status code |      Description      | Response headers |
+|-------------|-----------------------|------------------|
+| **200**     | OK                    | -                |
+| **400**     | Bad Request           | -                |
+| **404**     | Not Found             | -                |
+| **500**     | Internal Server Error | -                |
 

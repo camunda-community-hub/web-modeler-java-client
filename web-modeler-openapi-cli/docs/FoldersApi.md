@@ -2,50 +2,65 @@
 
 All URIs are relative to *https://modeler.cloud.camunda.io*
 
-|                     Method                     |              HTTP request               | Description |
-|------------------------------------------------|-----------------------------------------|-------------|
-| [**createFolder**](FoldersApi.md#createFolder) | **POST** /api/beta/folders              |
-| [**deleteFolder**](FoldersApi.md#deleteFolder) | **DELETE** /api/beta/folders/{folderId} |
-| [**getFolder**](FoldersApi.md#getFolder)       | **GET** /api/beta/folders/{folderId}    |
-| [**patchFolder**](FoldersApi.md#patchFolder)   | **PATCH** /api/beta/folders/{folderId}  |
+|                     Method                     |             HTTP request              | Description |
+|------------------------------------------------|---------------------------------------|-------------|
+| [**createFolder**](FoldersApi.md#createFolder) | **POST** /api/v1/folders              |             |
+| [**deleteFolder**](FoldersApi.md#deleteFolder) | **DELETE** /api/v1/folders/{folderId} |             |
+| [**getFolder**](FoldersApi.md#getFolder)       | **GET** /api/v1/folders/{folderId}    |             |
+| [**patchFolder**](FoldersApi.md#patchFolder)   | **PATCH** /api/v1/folders/{folderId}  |             |
 
 <a name="createFolder"></a>
 
 # **createFolder**
 
-> FolderMetadataDto createFolder(body)
+> FolderMetadataDto createFolder(createFolderDto)
 
-Creates a new folder.&lt;br/&gt; &lt;ul&gt;   &lt;li&gt;When only &lt;em&gt;parentId&lt;/em&gt; is given, the folder will be created in that       folder. The folder can be in any project of the same organization.&lt;/li&gt;   &lt;li&gt;When &lt;em&gt;projectId&lt;/em&gt; is given and &lt;em&gt;parentId&lt;/em&gt; is either       null or omitted altogether, the folder will be created in the root of the project.&lt;/li&gt;   &lt;li&gt;When &lt;em&gt;projectId&lt;/em&gt; and &lt;em&gt;parentId&lt;/em&gt; are both given,       they must be consistent - i.e. the parent folder is in the project.&lt;/li&gt; &lt;/ul&gt;
+Creates a new folder.
+* When only *parentId* is given, the folder will be created in that folder. The folder can be in any project of the same organization.
+* When *projectId* is given and *parentId* is either null or omitted altogether, the folder will be created in the root of the project.
+* When *projectId* and *parentId* are both given, they must be consistent - i.e. the parent folder is in the project.
 
 ### Example
 
 ```java
 // Import classes:
-//import io.swagger.client.ApiClient;
-//import io.swagger.client.ApiException;
-//import io.swagger.client.Configuration;
-//import io.swagger.client.auth.*;
-//import io.swagger.client.api.FoldersApi;
+import org.camunda.community.webmodeler.client.invoker.ApiClient;
+import org.camunda.community.webmodeler.client.invoker.ApiException;
+import org.camunda.community.webmodeler.client.invoker.Configuration;
+import org.camunda.community.webmodeler.client.invoker.auth.*;
+import org.camunda.community.webmodeler.client.invoker.models.*;
+import org.camunda.community.webmodeler.client.api.FoldersApi;
 
-ApiClient defaultClient = Configuration.getDefaultApiClient();
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://modeler.cloud.camunda.io");
+    
+    // Configure HTTP bearer authorization: Bearer
+    HttpBearerAuth Bearer = (HttpBearerAuth) defaultClient.getAuthentication("Bearer");
+    Bearer.setBearerToken("BEARER TOKEN");
 
-
-FoldersApi apiInstance = new FoldersApi();
-CreateFolderDto body = new CreateFolderDto(); // CreateFolderDto | 
-try {
-    FolderMetadataDto result = apiInstance.createFolder(body);
-    System.out.println(result);
-} catch (ApiException e) {
-    System.err.println("Exception when calling FoldersApi#createFolder");
-    e.printStackTrace();
+    FoldersApi apiInstance = new FoldersApi(defaultClient);
+    CreateFolderDto createFolderDto = new CreateFolderDto(); // CreateFolderDto | 
+    try {
+      FolderMetadataDto result = apiInstance.createFolder(createFolderDto);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling FoldersApi#createFolder");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
 }
 ```
 
 ### Parameters
 
-|   Name   |                   Type                    | Description | Notes |
-|----------|-------------------------------------------|-------------|-------|
-| **body** | [**CreateFolderDto**](CreateFolderDto.md) |             |
+|        Name         |                   Type                    | Description | Notes |
+|---------------------|-------------------------------------------|-------------|-------|
+| **createFolderDto** | [**CreateFolderDto**](CreateFolderDto.md) |             |       |
 
 ### Return type
 
@@ -60,34 +75,55 @@ try {
 - **Content-Type**: application/json
 - **Accept**: application/json
 
+### HTTP response details
+
+| Status code |      Description      | Response headers |
+|-------------|-----------------------|------------------|
+| **200**     | OK                    | -                |
+| **400**     | Bad Request           | -                |
+| **404**     | Not Found             | -                |
+| **500**     | Internal Server Error | -                |
+
 <a name="deleteFolder"></a>
 
 # **deleteFolder**
 
 > deleteFolder(folderId)
 
-Deletion of resources is recursive and cannot be undone.
+This endpoint deletes an empty folder. A folder is considered empty if there are no files in it. Deletion of resources is recursive and cannot be undone.
 
 ### Example
 
 ```java
 // Import classes:
-//import io.swagger.client.ApiClient;
-//import io.swagger.client.ApiException;
-//import io.swagger.client.Configuration;
-//import io.swagger.client.auth.*;
-//import io.swagger.client.api.FoldersApi;
+import org.camunda.community.webmodeler.client.invoker.ApiClient;
+import org.camunda.community.webmodeler.client.invoker.ApiException;
+import org.camunda.community.webmodeler.client.invoker.Configuration;
+import org.camunda.community.webmodeler.client.invoker.auth.*;
+import org.camunda.community.webmodeler.client.invoker.models.*;
+import org.camunda.community.webmodeler.client.api.FoldersApi;
 
-ApiClient defaultClient = Configuration.getDefaultApiClient();
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://modeler.cloud.camunda.io");
+    
+    // Configure HTTP bearer authorization: Bearer
+    HttpBearerAuth Bearer = (HttpBearerAuth) defaultClient.getAuthentication("Bearer");
+    Bearer.setBearerToken("BEARER TOKEN");
 
-
-FoldersApi apiInstance = new FoldersApi();
-UUID folderId = new UUID(); // UUID | 
-try {
-    apiInstance.deleteFolder(folderId);
-} catch (ApiException e) {
-    System.err.println("Exception when calling FoldersApi#deleteFolder");
-    e.printStackTrace();
+    FoldersApi apiInstance = new FoldersApi(defaultClient);
+    UUID folderId = new UUID(); // UUID | 
+    try {
+      apiInstance.deleteFolder(folderId);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling FoldersApi#deleteFolder");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
 }
 ```
 
@@ -95,7 +131,7 @@ try {
 
 |     Name     |      Type       | Description | Notes |
 |--------------|-----------------|-------------|-------|
-| **folderId** | [**UUID**](.md) |             |
+| **folderId** | [**UUID**](.md) |             |       |
 
 ### Return type
 
@@ -110,6 +146,14 @@ null (empty response body)
 - **Content-Type**: Not defined
 - **Accept**: application/json
 
+### HTTP response details
+
+| Status code |      Description      | Response headers |
+|-------------|-----------------------|------------------|
+| **204**     | No Content            | -                |
+| **404**     | Not Found             | -                |
+| **500**     | Internal Server Error | -                |
+
 <a name="getFolder"></a>
 
 # **getFolder**
@@ -120,23 +164,35 @@ null (empty response body)
 
 ```java
 // Import classes:
-//import io.swagger.client.ApiClient;
-//import io.swagger.client.ApiException;
-//import io.swagger.client.Configuration;
-//import io.swagger.client.auth.*;
-//import io.swagger.client.api.FoldersApi;
+import org.camunda.community.webmodeler.client.invoker.ApiClient;
+import org.camunda.community.webmodeler.client.invoker.ApiException;
+import org.camunda.community.webmodeler.client.invoker.Configuration;
+import org.camunda.community.webmodeler.client.invoker.auth.*;
+import org.camunda.community.webmodeler.client.invoker.models.*;
+import org.camunda.community.webmodeler.client.api.FoldersApi;
 
-ApiClient defaultClient = Configuration.getDefaultApiClient();
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://modeler.cloud.camunda.io");
+    
+    // Configure HTTP bearer authorization: Bearer
+    HttpBearerAuth Bearer = (HttpBearerAuth) defaultClient.getAuthentication("Bearer");
+    Bearer.setBearerToken("BEARER TOKEN");
 
-
-FoldersApi apiInstance = new FoldersApi();
-UUID folderId = new UUID(); // UUID | 
-try {
-    FolderDto result = apiInstance.getFolder(folderId);
-    System.out.println(result);
-} catch (ApiException e) {
-    System.err.println("Exception when calling FoldersApi#getFolder");
-    e.printStackTrace();
+    FoldersApi apiInstance = new FoldersApi(defaultClient);
+    UUID folderId = new UUID(); // UUID | 
+    try {
+      FolderDto result = apiInstance.getFolder(folderId);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling FoldersApi#getFolder");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
 }
 ```
 
@@ -144,7 +200,7 @@ try {
 
 |     Name     |      Type       | Description | Notes |
 |--------------|-----------------|-------------|-------|
-| **folderId** | [**UUID**](.md) |             |
+| **folderId** | [**UUID**](.md) |             |       |
 
 ### Return type
 
@@ -159,45 +215,67 @@ try {
 - **Content-Type**: Not defined
 - **Accept**: application/json
 
+### HTTP response details
+
+| Status code |      Description      | Response headers |
+|-------------|-----------------------|------------------|
+| **200**     | OK                    | -                |
+| **404**     | Not Found             | -                |
+| **500**     | Internal Server Error | -                |
+
 <a name="patchFolder"></a>
 
 # **patchFolder**
 
-> FolderMetadataDto patchFolder(body, folderId)
+> FolderMetadataDto patchFolder(folderId, updateFolderDto)
 
-This endpoint updates the name or location of a folder, or both at the same time.&lt;br/&gt; To move a folder, specify &lt;em&gt;projectId&lt;/em&gt; and/or &lt;em&gt;parentId&lt;/em&gt;: &lt;ul&gt;   &lt;li&gt;When only &lt;em&gt;parentId&lt;/em&gt; is given, the file will be moved to that       folder. The folder must keep in the same organization.&lt;/li&gt;   &lt;li&gt;When &lt;em&gt;projectId&lt;/em&gt; is given and &lt;em&gt;parentId&lt;/em&gt; is either       null or omitted altogether, the file will be moved to the root of the project.&lt;/li&gt;   &lt;li&gt;When &lt;em&gt;projectId&lt;/em&gt; and &lt;em&gt;parentId&lt;/em&gt; are both given,       they must be consistent - i.e. the new parent folder is in the new project.&lt;/li&gt; &lt;/ul&gt;
+This endpoint updates the name or location of a folder, or both at the same time.
+
+To move a folder, specify *projectId* and/or *parentId*: * When only *parentId* is given, the file will be moved to that       folder. The folder must keep in the same organization.&lt;/p&gt;&lt;/li&gt;   &lt;li&gt;&lt;p&gt;When *projectId* is given and *parentId* is either       null or omitted altogether, the file will be moved to the root of the project.&lt;/p&gt;&lt;/li&gt;   &lt;li&gt;&lt;p&gt;When *projectId* and *parentId* are both given,       they must be consistent - i.e. the new parent folder is in the new project.&lt;/p&gt;&lt;/li&gt; &lt;/ul&gt;
 
 ### Example
 
 ```java
 // Import classes:
-//import io.swagger.client.ApiClient;
-//import io.swagger.client.ApiException;
-//import io.swagger.client.Configuration;
-//import io.swagger.client.auth.*;
-//import io.swagger.client.api.FoldersApi;
+import org.camunda.community.webmodeler.client.invoker.ApiClient;
+import org.camunda.community.webmodeler.client.invoker.ApiException;
+import org.camunda.community.webmodeler.client.invoker.Configuration;
+import org.camunda.community.webmodeler.client.invoker.auth.*;
+import org.camunda.community.webmodeler.client.invoker.models.*;
+import org.camunda.community.webmodeler.client.api.FoldersApi;
 
-ApiClient defaultClient = Configuration.getDefaultApiClient();
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://modeler.cloud.camunda.io");
+    
+    // Configure HTTP bearer authorization: Bearer
+    HttpBearerAuth Bearer = (HttpBearerAuth) defaultClient.getAuthentication("Bearer");
+    Bearer.setBearerToken("BEARER TOKEN");
 
-
-FoldersApi apiInstance = new FoldersApi();
-UpdateFolderDto body = new UpdateFolderDto(); // UpdateFolderDto | 
-UUID folderId = new UUID(); // UUID | 
-try {
-    FolderMetadataDto result = apiInstance.patchFolder(body, folderId);
-    System.out.println(result);
-} catch (ApiException e) {
-    System.err.println("Exception when calling FoldersApi#patchFolder");
-    e.printStackTrace();
+    FoldersApi apiInstance = new FoldersApi(defaultClient);
+    UUID folderId = new UUID(); // UUID | 
+    UpdateFolderDto updateFolderDto = new UpdateFolderDto(); // UpdateFolderDto | 
+    try {
+      FolderMetadataDto result = apiInstance.patchFolder(folderId, updateFolderDto);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling FoldersApi#patchFolder");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
 }
 ```
 
 ### Parameters
 
-|     Name     |                   Type                    | Description | Notes |
-|--------------|-------------------------------------------|-------------|-------|
-| **body**     | [**UpdateFolderDto**](UpdateFolderDto.md) |             |
-| **folderId** | [**UUID**](.md)                           |             |
+|        Name         |                   Type                    | Description | Notes |
+|---------------------|-------------------------------------------|-------------|-------|
+| **folderId**        | [**UUID**](.md)                           |             |       |
+| **updateFolderDto** | [**UpdateFolderDto**](UpdateFolderDto.md) |             |       |
 
 ### Return type
 
@@ -211,4 +289,13 @@ try {
 
 - **Content-Type**: application/json
 - **Accept**: application/json
+
+### HTTP response details
+
+| Status code |      Description      | Response headers |
+|-------------|-----------------------|------------------|
+| **200**     | OK                    | -                |
+| **400**     | Bad Request           | -                |
+| **404**     | Not Found             | -                |
+| **500**     | Internal Server Error | -                |
 

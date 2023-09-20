@@ -9,6 +9,8 @@ import picocli.CommandLine.Option;
 @Command(description = "Web Modeler CLI", mixinStandardHelpOptions = true)
 public class CommandLineApp {
 
+    public static final int MAX_PAGE_SIZE = 50;
+
     @Option(
             names = {"--token", "-t"},
             description = "JWT token",
@@ -21,6 +23,13 @@ public class CommandLineApp {
             description = "base path of API (default to Camunda Cloud path)",
             scope = CommandLine.ScopeType.INHERIT)
     private String basePath = new ApiClient().getBasePath();
+
+    protected CollaboratorsApi buildCollaboratorsClient() {
+        CollaboratorsApi result = new CollaboratorsApi();
+        ApiClient apiClient = result.getApiClient();
+        configureClient(apiClient);
+        return result;
+    }
 
     protected FilesApi buildFilesClient() {
         FilesApi result = new FilesApi();

@@ -1,0 +1,11 @@
+# PubSearchDtoMilestoneMetadataDto
+
+## Properties
+
+|    Name    |                        Type                         | Description |   Notes    |
+|------------|-----------------------------------------------------|-------------|------------|
+| **filter** | [**MilestoneMetadataDto**](MilestoneMetadataDto.md) |             | [optional] |
+| **sort**   | [**List&lt;SortDto&gt;**](SortDto.md)               |             | [optional] |
+| **page**   | **Integer**                                         |             | [optional] |
+| **size**   | **Integer**                                         |             | [optional] |
+

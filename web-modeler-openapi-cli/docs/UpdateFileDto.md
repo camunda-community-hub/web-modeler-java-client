@@ -6,7 +6,7 @@
 |---------------|-------------|-------------|------------|
 | **name**      | **String**  |             | [optional] |
 | **content**   | **String**  |             | [optional] |
-| **revision**  | **Integer** |             |
+| **revision**  | **Integer** |             |            |
 | **projectId** | **String**  |             | [optional] |
-| **parentId**  | **String**  |             | [optional] |
+| **folderId**  | **String**  |             | [optional] |
 

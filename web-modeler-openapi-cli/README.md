@@ -54,8 +54,8 @@ Downloads all files of the project.
   create files. If a folder name is ambiguous, all folders with the same name get merged. If files are ambiguous, they
   overwrite each other and the last file wins
 * `CANONICAL_PATH` - Recommended if your folder and file names are not unique. It uses the canonical path. Each folder
-  and file name is suffixed by its unique ID (i.e.. `<name>[<id>]`). This makes names unique, but also less pleasant to
-  look at)
+  and file name is suffixed by its unique ID (i.e. `<name>[<id>]`). This makes names unique, but also less pleasant to
+  look at.
 
 ## Building from source
 

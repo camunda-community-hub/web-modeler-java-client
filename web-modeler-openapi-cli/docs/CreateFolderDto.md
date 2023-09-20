@@ -4,7 +4,7 @@
 
 |     Name      |    Type    | Description |   Notes    |
 |---------------|------------|-------------|------------|
-| **name**      | **String** |             |
+| **name**      | **String** |             |            |
 | **projectId** | **String** |             | [optional] |
 | **parentId**  | **String** |             | [optional] |
 

@@ -1,6 +1,6 @@
 package org.camunda.community.webmodeler.client.springboot;
 
-import org.camunda.community.webmodeler.client.dto.ProjectMetadataDto;
+import org.camunda.community.webmodeler.client.dto.PubSearchDtoProjectMetadataDto;
 import org.camunda.community.webmodeler.client.invoker.ApiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,8 +16,7 @@ public class PrintModels {
 
     @PostConstruct
     public void print() throws ApiException {
-        print("Projects", camundaWebModelerApi.projectsApi().listProjects());
-        //print("Projects", camundaWebModelerApi.filesApi().);
+        print("Projects", camundaWebModelerApi.projectsApi().searchProjects(new PubSearchDtoProjectMetadataDto()).getItems());
     }
 
     private void print(String name, List elements) {

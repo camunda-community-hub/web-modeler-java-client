@@ -5,16 +5,19 @@ import static org.camunda.community.webmodeler.download.Downloader.Mode.SIMPLE_P
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
+import org.camunda.community.webmodeler.cli.CommandLineApp;
 import org.camunda.community.webmodeler.client.api.FilesApi;
 import org.camunda.community.webmodeler.client.dto.FileDto;
 import org.camunda.community.webmodeler.client.dto.FileMetadataDto;
 import org.camunda.community.webmodeler.client.dto.PathElementDto;
+import org.camunda.community.webmodeler.client.dto.PubSearchDtoFileMetadataDto;
 import org.camunda.community.webmodeler.client.invoker.ApiException;
 
 public class Downloader {
@@ -28,9 +31,9 @@ public class Downloader {
     }
 
     public void downloadProject(UUID projectUUID, Mode mode) throws ApiException {
-        List<FileMetadataDto> fileMetadataDto = filesApi.listFiles(projectUUID);
+        List<FileMetadataDto> fileMetadataDtoList = downloadFiles(projectUUID, 0, new ArrayList<>());
 
-        Map<String, FileDto> idToFile = fileMetadataDto.stream()
+        Map<String, FileDto> idToFile = fileMetadataDtoList.stream()
                 .map(this::getFile)
                 .collect(Collectors.toMap(item -> item.getMetadata().getId(), item -> item));
 
@@ -41,6 +44,23 @@ public class Downloader {
         } else {
             throw new IllegalArgumentException("Unknown mode: " + mode);
         }
+    }
+
+    private List<FileMetadataDto> downloadFiles(UUID projectUUID, int page, List<FileMetadataDto> list)
+            throws ApiException {
+        FileMetadataDto fileMetadataDto = new FileMetadataDto().projectId(projectUUID.toString());
+        PubSearchDtoFileMetadataDto fileSearchDto = new PubSearchDtoFileMetadataDto()
+                .filter(fileMetadataDto)
+                .size(CommandLineApp.MAX_PAGE_SIZE)
+                .page(page);
+        List<FileMetadataDto> items = filesApi.searchFiles(fileSearchDto).getItems();
+
+        if (items != null && !items.isEmpty()) {
+            list.addAll(items);
+            return downloadFiles(projectUUID, page + 1, list);
+        }
+
+        return list;
     }
 
     private void writeFilesSimplePath(Map<String, FileDto> idToFile) {

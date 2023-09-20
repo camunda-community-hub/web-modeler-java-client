@@ -4,5 +4,5 @@
 
 |   Name   |    Type    | Description | Notes |
 |----------|------------|-------------|-------|
-| **name** | **String** |             |
+| **name** | **String** |             |       |
 

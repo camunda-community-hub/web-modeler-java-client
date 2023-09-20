@@ -13,25 +13,26 @@ import java.io.IOException;
 
 public class SaasAuthentication extends JwtAuthentication {
 
-    private String clientId;
-    private String clientSecret;
+    private final String clientId;
+    private final String clientSecret;
 
-    private String oauthAudience;
-    private String oauthUrl;
+    private final String oAuthAudience;
+    private final String oAuthUrl;
 
     public SaasAuthentication(String clientId, String clientSecret) {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
 
-        this.oauthUrl = "https://login.cloud.camunda.io/oauth/token";
-        this.oauthAudience = "api.cloud.camunda.io";
+        this.oAuthUrl = "https://login.cloud.camunda.io/oauth/token";
+        this.oAuthAudience = "api.cloud.camunda.io";
     }
 
-    public SaasAuthentication(String oauthUrl, String oauthAudience, String clientId, String clientSecret) {
+    public SaasAuthentication(String oAuthUrl, String oAuthAudience, String clientId, String clientSecret) {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
-        this.oauthUrl = oauthUrl;
-        this.oauthAudience = oauthAudience;
+
+        this.oAuthUrl = oAuthUrl;
+        this.oAuthAudience = oAuthAudience;
     }
 
     public static CloseableHttpResponse execute(CloseableHttpClient httpClient, ClassicHttpRequest request) throws IOException {
@@ -45,10 +46,10 @@ public class SaasAuthentication extends JwtAuthentication {
     @Override
     public void authenticate(ApiClient client) {
 
-        HttpPost httpPost = new HttpPost(oauthUrl);
+        HttpPost httpPost = new HttpPost(oAuthUrl);
         httpPost.addHeader("Content-Type", "application/json");
 
-        String data = "{\"grant_type\":\"client_credentials\", \"audience\":\"" + oauthAudience + "\", \"client_id\": \""
+        String data = "{\"grant_type\":\"client_credentials\", \"audience\":\"" + oAuthAudience + "\", \"client_id\": \""
                 + clientId + "\", \"client_secret\":\"" + clientSecret + "\"}";
         httpPost.setEntity(new StringEntity(data));
 

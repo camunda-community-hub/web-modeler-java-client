@@ -10,20 +10,18 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class CamundaWebModelerClientStarter {
 
-    @Value( "${camunda.bpm.client.baseUrl:https://modeler.cloud.camunda.io/api/beta/}" )
+    @Value( "${camunda.modeler.client.baseUrl:https://modeler.cloud.camunda.io}" )
     private String basePath;
-    @Value( "${camunda.bpm.client.authUrl:https://login.cloud.camunda.io/oauth/token/}" )
-    private String oauthUrl;
+    @Value( "${camunda.modeler.client.oAuthUrl:https://login.cloud.camunda.io/oauth/token/}" )
+    private String oAuthUrl;
 
-    @Value( "${camunda.bpm.client.oauthAudience:api.cloud.camunda.io}" )
-    private String oauthAudience;
+    @Value( "${camunda.modeler.client.oAuthAudience:api.cloud.camunda.io}" )
+    private String oAuthAudience;
 
     @Value( "${camunda.modeler.client.clientId}" )
     private String clientId;
     @Value( "${camunda.modeler.client.clientSecret}" )
     private String clientSecret;
-
-    private AuthInterface authInterface;
 
     @Bean
     public CamundaWebModelerApi createCamundaWebModelerApi(ApiClient client) {
@@ -33,10 +31,9 @@ public class CamundaWebModelerClientStarter {
     @Bean
     public ApiClient createApiClient() {
         ApiClient client = new ApiClient();
-        //
-        // client.setBasePath(basePath);
+        client.setBasePath(basePath);
 
-        authInterface = new SaasAuthentication(oauthUrl, oauthAudience, clientId, clientSecret);
+        AuthInterface authInterface = new SaasAuthentication(oAuthUrl, oAuthAudience, clientId, clientSecret);
         authInterface.authenticate(client);
         // TODO: Timeout handling?
 
