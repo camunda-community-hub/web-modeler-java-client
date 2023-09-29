@@ -5,13 +5,13 @@ Java Client for the Web Modeler (based on its OpenAPI spec from https://docs.cam
 
 In Spring Boot
 
-Add depdency to Maven pom.xml:
+Add dependency to Maven pom.xml:
 
 ```xml
   <dependency>
     <groupId>org.camunda.community.webmodeler</groupId>
     <artifactId>web-modeler-openapi-springboot</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.1-SNAPSHOT</version>
   </dependency>
 ```
 
