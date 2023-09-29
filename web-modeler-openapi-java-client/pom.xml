@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.camunda.community.webmodeler</groupId>
     <artifactId>web-modeler-openapi-root</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>1.0.0</version>
   </parent>
 
   <artifactId>web-modeler-openapi-java-client</artifactId>
