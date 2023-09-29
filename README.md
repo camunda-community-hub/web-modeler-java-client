@@ -21,9 +21,9 @@ Add `application.properties`:
 camunda.modeler.client.clientId=WlMOFLRL1sOmZpR9
 camunda.modeler.client.clientSecret=1vRRGPfoMbHBcrUZgbaQG0g1j0p~2hTF
 
-camunda.modeler.client.baseUrl=https://api.cloud.camunda.io
-camunda.modeler.client.oauthUrl=https://login.cloud.camunda.io/oauth/token
-camunda.modeler.client.oauthAudience=api.cloud.camunda.io
+camunda.modeler.client.baseUrl=https://modeler.cloud.camunda.io
+camunda.modeler.client.oAuthUrl=https://login.cloud.camunda.io/oauth/token
+camunda.modeler.client.oAuthAudience=api.cloud.camunda.io
 ```
 
 Now you can just inject the API:
