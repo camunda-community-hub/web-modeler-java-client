@@ -16,7 +16,7 @@
     <maven-compiler-plugin-version>3.11.0</maven-compiler-plugin-version>
     <picocli.version>4.7.2</picocli.version>
     <spotless-maven-plugin.version>2.10.0</spotless-maven-plugin.version>
-    <spotless.version>2.36.0</spotless.version>
+    <spotless.version>2.41.0</spotless.version>
   </properties>
 
   <dependencies>
