@@ -5,7 +5,14 @@
 
 Command line interface for [Web Modeler API](https://docs.camunda.io/docs/apis-clients/web-modeler-api/).
 
-Early stages of development.
+All base parameters can be populated from the command line as well:
+
+* `CAMUNDA_MODELER_CLIENT_BASEURL` -> `--baseUrl`
+* `CAMUNDA_MODELER_CLIENT_AUTHURL` -> `--authUrl`
+* `CAMUNDA_MODELER_CLIENT_AUDIENCE` -> `--audience`
+* `CAMUNDA_MODELER_CLIENT_CLIENTID` -> `--clientId`
+* `CAMUNDA_MODELER_CLIENT_CLIENTSECRET` -> `--clientSecret`
+* `CAMUNDA_MODELER_CLIENT_AUTHTYPE` -> `--authType`
 
 ## Usage
 
