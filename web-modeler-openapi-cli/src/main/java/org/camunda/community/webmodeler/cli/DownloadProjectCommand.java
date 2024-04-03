@@ -8,42 +8,42 @@ import org.camunda.community.webmodeler.download.Downloader.Mode;
 import picocli.CommandLine;
 
 @CommandLine.Command(
-        name = "downloadProject",
-        description = "Downloads all files of the project.",
-        mixinStandardHelpOptions = true)
+    name = "downloadProject",
+    description = "Downloads all files of the project.",
+    mixinStandardHelpOptions = true)
 public class DownloadProjectCommand extends AbstractCommand {
 
-    @CommandLine.Option(
-            names = {"--project", "-p"},
-            description = "project UUID",
-            scope = CommandLine.ScopeType.LOCAL,
-            required = true)
-    private UUID projectUUID;
+  @CommandLine.Option(
+      names = {"--project", "-p"},
+      description = "project UUID",
+      scope = CommandLine.ScopeType.LOCAL,
+      required = true)
+  UUID projectUUID;
 
-    @CommandLine.Option(
-            names = {"--output", "-o"},
-            description = "output folder",
-            scope = CommandLine.ScopeType.LOCAL)
-    private String output;
+  @CommandLine.Option(
+      names = {"--output", "-o"},
+      description = "output folder",
+      scope = CommandLine.ScopeType.LOCAL)
+  String output;
 
-    @CommandLine.Option(
-            names = {"--mode", "-m"},
-            description = "Overwrite mode for download. Valid values are: ${COMPLETION-CANDIDATES}",
-            defaultValue = "SIMPLE_PATH",
-            scope = CommandLine.ScopeType.LOCAL)
-    private Mode mode;
+  @CommandLine.Option(
+      names = {"--mode", "-m"},
+      description = "Overwrite mode for download. Valid values are: ${COMPLETION-CANDIDATES}",
+      defaultValue = "SIMPLE_PATH",
+      scope = CommandLine.ScopeType.LOCAL)
+  Mode mode;
 
-    @Override
-    public Integer call() throws Exception {
-        final File folder;
-        if (output == null) {
-            folder = new File(".");
-        } else {
-            folder = new File(output);
-            FileUtils.forceMkdir(folder);
-        }
-        Downloader downloader = new Downloader(parent.buildFilesClient(), folder);
-        downloader.downloadProject(projectUUID, mode);
-        return 0;
+  @Override
+  protected Object createResponse() throws Exception {
+    final File folder;
+    if (output == null) {
+      folder = new File(".");
+    } else {
+      folder = new File(output);
+      FileUtils.forceMkdir(folder);
     }
+    Downloader downloader = new Downloader(parent.buildFilesClient(), folder);
+    downloader.downloadProject(projectUUID, mode);
+    return null;
+  }
 }

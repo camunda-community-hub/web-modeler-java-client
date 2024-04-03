@@ -22,105 +22,110 @@ import org.camunda.community.webmodeler.client.invoker.ApiException;
 
 public class Downloader {
 
-    private final FilesApi filesApi;
-    private final File folder;
+  private final FilesApi filesApi;
+  private final File folder;
 
-    public Downloader(FilesApi filesApi, File folder) {
-        this.filesApi = Objects.requireNonNull(filesApi);
-        this.folder = Objects.requireNonNull(folder);
+  public Downloader(FilesApi filesApi, File folder) {
+    this.filesApi = Objects.requireNonNull(filesApi);
+    this.folder = Objects.requireNonNull(folder);
+  }
+
+  public void downloadProject(UUID projectUUID, Mode mode) throws ApiException {
+    List<FileMetadataDto> fileMetadataDtoList = downloadFiles(projectUUID, 0, new ArrayList<>());
+
+    Map<String, FileDto> idToFile =
+        fileMetadataDtoList.stream()
+            .map(this::getFile)
+            .collect(Collectors.toMap(item -> item.getMetadata().getId(), item -> item));
+
+    if (SIMPLE_PATH.equals(mode)) {
+      writeFilesSimplePath(idToFile);
+    } else if (CANONICAL_PATH.equals(mode)) {
+      writeFilesCanonicalPath(idToFile);
+    } else {
+      throw new IllegalArgumentException("Unknown mode: " + mode);
+    }
+  }
+
+  private List<FileMetadataDto> downloadFiles(
+      UUID projectUUID, int page, List<FileMetadataDto> list) throws ApiException {
+    FileMetadataDto fileMetadataDto = new FileMetadataDto().projectId(projectUUID.toString());
+    PubSearchDtoFileMetadataDto fileSearchDto =
+        new PubSearchDtoFileMetadataDto()
+            .filter(fileMetadataDto)
+            .size(CommandLineApp.MAX_PAGE_SIZE)
+            .page(page);
+    List<FileMetadataDto> items = filesApi.searchFiles(fileSearchDto).getItems();
+
+    if (items != null && !items.isEmpty()) {
+      list.addAll(items);
+      return downloadFiles(projectUUID, page + 1, list);
     }
 
-    public void downloadProject(UUID projectUUID, Mode mode) throws ApiException {
-        List<FileMetadataDto> fileMetadataDtoList = downloadFiles(projectUUID, 0, new ArrayList<>());
+    return list;
+  }
 
-        Map<String, FileDto> idToFile = fileMetadataDtoList.stream()
-                .map(this::getFile)
-                .collect(Collectors.toMap(item -> item.getMetadata().getId(), item -> item));
+  private void writeFilesSimplePath(Map<String, FileDto> idToFile) {
+    idToFile.values().stream()
+        .forEach(file -> writeFile(file.getContent(), file.getMetadata().getSimplePath()));
+  }
 
-        if (SIMPLE_PATH.equals(mode)) {
-            writeFilesSimplePath(idToFile);
-        } else if (CANONICAL_PATH.equals(mode)) {
-            writeFilesCanonicalPath(idToFile);
-        } else {
-            throw new IllegalArgumentException("Unknown mode: " + mode);
-        }
+  private void writeFilesCanonicalPath(Map<String, FileDto> idToFile) {
+    idToFile.values().stream()
+        .forEach(file -> writeFile(file.getContent(), getCanonicalPath(file)));
+  }
+
+  private String getCanonicalPath(FileDto file) {
+    List<PathElementDto> pathElements = file.getMetadata().getCanonicalPath();
+
+    String folderPath =
+        pathElements.stream()
+            .map(pe -> String.format("%s[%s]", pe.getName(), pe.getId()))
+            .collect(Collectors.joining("/", "", "/"));
+
+    String fileName =
+        String.format(
+            "%s[%s].%s",
+            file.getMetadata().getName(),
+            file.getMetadata().getId(),
+            toExtension(file.getMetadata().getType()));
+
+    return folderPath + fileName;
+  }
+
+  private String toExtension(String type) {
+    if ("CONNECTOR_TEMPLATE".equalsIgnoreCase(type)) {
+      return "json";
+    } else {
+      return type.toLowerCase();
     }
+  }
 
-    private List<FileMetadataDto> downloadFiles(UUID projectUUID, int page, List<FileMetadataDto> list)
-            throws ApiException {
-        FileMetadataDto fileMetadataDto = new FileMetadataDto().projectId(projectUUID.toString());
-        PubSearchDtoFileMetadataDto fileSearchDto = new PubSearchDtoFileMetadataDto()
-                .filter(fileMetadataDto)
-                .size(CommandLineApp.MAX_PAGE_SIZE)
-                .page(page);
-        List<FileMetadataDto> items = filesApi.searchFiles(fileSearchDto).getItems();
+  private void writeFile(String content, String fileName) {
+    System.out.println("Writing: " + fileName);
+    File outputFile = new File(folder, fileName);
 
-        if (items != null && !items.isEmpty()) {
-            list.addAll(items);
-            return downloadFiles(projectUUID, page + 1, list);
-        }
-
-        return list;
+    try {
+      FileUtils.write(outputFile, content);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
     }
+  }
 
-    private void writeFilesSimplePath(Map<String, FileDto> idToFile) {
-        idToFile.values().stream()
-                .forEach(file -> writeFile(file.getContent(), file.getMetadata().getSimplePath()));
+  public FileDto getFile(FileMetadataDto fileMetadata) {
+    try {
+      return getFile(UUID.fromString(fileMetadata.getId()));
+    } catch (ApiException e) {
+      throw new RuntimeException(e);
     }
+  }
 
-    private void writeFilesCanonicalPath(Map<String, FileDto> idToFile) {
-        idToFile.values().stream().forEach(file -> writeFile(file.getContent(), getCanonicalPath(file)));
-    }
+  public FileDto getFile(UUID fileUUID) throws ApiException {
+    return filesApi.getFile(fileUUID);
+  }
 
-    private String getCanonicalPath(FileDto file) {
-        List<PathElementDto> pathElements = file.getMetadata().getCanonicalPath();
-
-        String folderPath = pathElements.stream()
-                .map(pe -> String.format("%s[%s]", pe.getName(), pe.getId()))
-                .collect(Collectors.joining("/", "", "/"));
-
-        String fileName = String.format(
-                "%s[%s].%s",
-                file.getMetadata().getName(),
-                file.getMetadata().getId(),
-                toExtension(file.getMetadata().getType()));
-
-        return folderPath + fileName;
-    }
-
-    private String toExtension(String type) {
-        if ("CONNECTOR_TEMPLATE".equalsIgnoreCase(type)) {
-            return "json";
-        } else {
-            return type.toLowerCase();
-        }
-    }
-
-    private void writeFile(String content, String fileName) {
-        System.out.println("Writing: " + fileName);
-        File outputFile = new File(folder, fileName);
-
-        try {
-            FileUtils.write(outputFile, content);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public FileDto getFile(FileMetadataDto fileMetadata) {
-        try {
-            return getFile(UUID.fromString(fileMetadata.getId()));
-        } catch (ApiException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public FileDto getFile(UUID fileUUID) throws ApiException {
-        return filesApi.getFile(fileUUID);
-    }
-
-    public enum Mode {
-        SIMPLE_PATH,
-        CANONICAL_PATH
-    }
+  public enum Mode {
+    SIMPLE_PATH,
+    CANONICAL_PATH
+  }
 }

@@ -3,20 +3,38 @@
 
 # Web Modeler CLI
 
-Command line interface for [Web Modeler API](https://docs.camunda.io/docs/next/apis-clients/web-modeler-api/).
+Command line interface for [Web Modeler API](https://docs.camunda.io/docs/apis-clients/web-modeler-api/).
 
-Early stages of development.
+All base parameters can be populated from the command line as well:
+
+* `CAMUNDA_MODELER_CLIENT_BASEURL` -> `--baseUrl`
+* `CAMUNDA_MODELER_CLIENT_AUTHURL` -> `--authUrl`
+* `CAMUNDA_MODELER_CLIENT_AUDIENCE` -> `--audience`
+* `CAMUNDA_MODELER_CLIENT_CLIENTID` -> `--clientId`
+* `CAMUNDA_MODELER_CLIENT_CLIENTSECRET` -> `--clientSecret`
+* `CAMUNDA_MODELER_CLIENT_AUTHTYPE` -> `--authType`
 
 ## Usage
 
 ```
-Usage: <main class> [-hV] [-b=<basePath>] -t=<token> [COMMAND]
+Usage: <main class> [-hV] [--audience=<audience>] [--authType=<authType>]
+                    [--authUrl=<authUrl>] [-b=<baseUrl>]
+                    [--clientId=<clientId>] [--clientSecret=<clientSecret>]
+                    [-t=<token>] [COMMAND]
 Web Modeler CLI
-  -b, --basePath=<basePath>
-                        base path of API (default to Camunda Cloud path)
-  -h, --help            Show this help message and exit.
-  -t, --token=<token>   JWT token
-  -V, --version         Print version information and exit.
+      --audience=<audience> audience of API (default to Camunda Saas audience)
+      --authType=<authType> auth type, only required for self-managed (default
+                              to KEYCLOAK)
+      --authUrl=<authUrl>   auth url of API (default to Camunda Saas auth url)
+  -b, --baseUrl, --basePath=<baseUrl>
+                            base url of API (default to Camunda Modeler Saas
+                              url)
+      --clientId=<clientId> client id
+      --clientSecret=<clientSecret>
+                            client secret
+  -h, --help                Show this help message and exit.
+  -t, --token=<token>       JWT token
+  -V, --version             Print version information and exit.
 Commands:
   info             Prints out info (permissions, authorized organization).
   listProjects     Prints out projects in the organization.
@@ -24,28 +42,40 @@ Commands:
                      contents).
   downloadFile     Prints out file content.
   downloadProject  Downloads all files of the project.
-```
 
-JWT token must be [generated elsewhere](https://docs.camunda.io/docs/next/apis-clients/web-modeler-api/#authentication) and passed into the CLI via `-t, --token=<token>`
+```
 
 Program will print out usage help for each subcommand.
 
 ### Download Project
 
 ```
-Usage: <main class> downloadProject [-hV] [-b=<basePath>] [-m=<mode>]
-                                    [-o=<output>] -p=<projectUUID> -t=<token>
+Usage: <main class> downloadProject [-hV] [--audience=<audience>]
+                                    [--authType=<authType>]
+                                    [--authUrl=<authUrl>] [-b=<baseUrl>]
+                                    [--clientId=<clientId>]
+                                    [--clientSecret=<clientSecret>] [-m=<mode>]
+                                    [-o=<output>] -p=<projectUUID> [-t=<token>]
 Downloads all files of the project.
-  -b, --basePath=<basePath>
-                          base path of API (default to Camunda Cloud path)
-  -h, --help              Show this help message and exit.
-  -m, --mode=<mode>       Overwrite mode for download. Valid values are:
-                            SIMPLE_PATH, CANONICAL_PATH
-  -o, --output=<output>   output folder
+      --audience=<audience> audience of API (default to Camunda Saas audience)
+      --authType=<authType> auth type, only required for self-managed (default
+                              to KEYCLOAK)
+      --authUrl=<authUrl>   auth url of API (default to Camunda Saas auth url)
+  -b, --baseUrl, --basePath=<baseUrl>
+                            base url of API (default to Camunda Modeler Saas
+                              url)
+      --clientId=<clientId> client id
+      --clientSecret=<clientSecret>
+                            client secret
+  -h, --help                Show this help message and exit.
+  -m, --mode=<mode>         Overwrite mode for download. Valid values are:
+                              SIMPLE_PATH, CANONICAL_PATH
+  -o, --output=<output>     output folder
   -p, --project=<projectUUID>
-                          project UUID
-  -t, --token=<token>     JWT token
-  -V, --version           Print version information and exit.
+                            project UUID
+  -t, --token=<token>       JWT token
+  -V, --version             Print version information and exit.
+
 ```
 
 **Mode**
@@ -69,4 +99,3 @@ java -jar web-modeler-cli-*-jar-with-dependencies.jar --help
 
 * [Contributing Guide](./CONTRIBUTING.md)
 * [Code of Conduct](./CODE_OF_CONDUCT.md)
-

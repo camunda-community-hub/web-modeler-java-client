@@ -5,25 +5,29 @@ Java Client for the Web Modeler (based on its OpenAPI spec from https://docs.cam
 
 In Spring Boot
 
-Add dependency to Maven pom.xml:
+Add dependency to Maven `pom.xml`:
 
 ```xml
   <dependency>
     <groupId>org.camunda.community.webmodeler</groupId>
     <artifactId>web-modeler-openapi-springboot</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
   </dependency>
 ```
 
-Add `application.properties`:
+Add `application.yaml`:
 
-```properties
-camunda.modeler.client.clientId=WlMOFLRL1sOmZpR9
-camunda.modeler.client.clientSecret=1vRRGPfoMbHBcrUZgbaQG0g1j0p~2hTF
-
-camunda.modeler.client.baseUrl=https://modeler.cloud.camunda.io
-camunda.modeler.client.oAuthUrl=https://login.cloud.camunda.io/oauth/token
-camunda.modeler.client.oAuthAudience=api.cloud.camunda.io
+```yaml
+camunda:
+  modeler:
+    client:
+      base-url: https://modeler.cloud.camunda.io
+      auth-url: https://login.cloud.camunda.io/oauth/token
+      audience: api.cloud.camunda.io
+      auth-type: KEYCLOAK
+      identity-url: http://localhost:8084
+      client-id: <YOUR_CLIENDID>
+      client-secret: <YOUR_CLIENTSECRET>
 ```
 
 Now you can just inject the API:

@@ -1,0 +1,10 @@
+camunda:
+  modeler:
+    client:
+      client-id: x
+      client-secret: y
+      base-url: https://modeler.cloud.camunda.io
+      auth-url: https://login.cloud.camunda.io/oauth/token
+      audience: api.cloud.camunda.io
+      auth-type: KEYCLOAK
+      identity-url: http://localhost:8084
