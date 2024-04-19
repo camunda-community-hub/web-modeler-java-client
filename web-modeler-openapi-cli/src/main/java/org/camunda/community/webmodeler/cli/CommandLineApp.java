@@ -24,23 +24,26 @@ import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
-@Command(description = "Web Modeler CLI", mixinStandardHelpOptions = true)
+@Command(
+    description = "Web Modeler CLI",
+    mixinStandardHelpOptions = true,
+    subcommands = {
+      InfoCommand.class,
+      ListProjectsCommand.class,
+      ListFilesCommand.class,
+      DownloadFileCommand.class,
+      DownloadProjectCommand.class
+    })
 public class CommandLineApp {
 
   public static final int MAX_PAGE_SIZE = 50;
 
   @Option(
-      names = {"--token", "-t"},
-      description = "JWT token",
-      scope = CommandLine.ScopeType.INHERIT)
-  @Deprecated
-  String token;
-
-  @Option(
       names = {"--basePath", "-b", "--baseUrl"},
       description = "base url of API (default to Camunda Modeler Saas url)",
       scope = CommandLine.ScopeType.INHERIT,
-      defaultValue = "${CAMUNDA_MODELER_CLIENT_BASEURL:-https://modeler.cloud.camunda.io}")
+      defaultValue = "${CAMUNDA_MODELER_CLIENT_BASEURL:-https://modeler.cloud.camunda.io}",
+      required = true)
   String baseUrl;
 
   @Option(
@@ -48,45 +51,44 @@ public class CommandLineApp {
       description = "auth url of API (default to Camunda Saas auth url)",
       scope = CommandLine.ScopeType.INHERIT,
       defaultValue =
-          "${CAMUNDA_MODELER_CLIENT_AUTHURL:-https://login.cloud.camunda.io/oauth/token}")
+          "${CAMUNDA_MODELER_CLIENT_AUTHURL:-https://login.cloud.camunda.io/oauth/token}",
+      required = true)
   String authUrl;
 
   @Option(
       names = {"--audience"},
       description = "audience of API (default to Camunda Saas audience)",
       scope = CommandLine.ScopeType.INHERIT,
-      defaultValue = "${CAMUNDA_MODELER_CLIENT_AUDIENCE:-api.cloud.camunda.io}")
+      defaultValue = "${CAMUNDA_MODELER_CLIENT_AUDIENCE:-api.cloud.camunda.io}",
+      required = true)
   String audience;
 
   @Option(
       names = {"--clientId"},
       description = "client id",
       scope = CommandLine.ScopeType.INHERIT,
-      defaultValue = "${CAMUNDA_MODELER_CLIENT_CLIENTID}")
+      defaultValue = "${CAMUNDA_MODELER_CLIENT_CLIENTID}",
+      required = true)
   String clientId;
 
   @Option(
       names = {"--clientSecret"},
       description = "client secret",
       scope = CommandLine.ScopeType.INHERIT,
-      defaultValue = "${CAMUNDA_MODELER_CLIENT_CLIENTSECRET}")
+      defaultValue = "${CAMUNDA_MODELER_CLIENT_CLIENTSECRET}",
+      required = true)
   String clientSecret;
 
   @Option(
       names = {"--authType"},
       description = "auth type, only required for self-managed (default to KEYCLOAK)",
       scope = CommandLine.ScopeType.INHERIT,
-      defaultValue = "${CAMUNDA_MODELER_CLIENT_AUTHTYPE:-KEYCLOAK}")
+      defaultValue = "${CAMUNDA_MODELER_CLIENT_AUTHTYPE:-KEYCLOAK}",
+      required = true)
   Type authType;
 
   public static void main(String[] args) {
-    new CommandLine(new CommandLineApp())
-        .addSubcommand(InfoCommand.class)
-        .addSubcommand(ListProjectsCommand.class)
-        .addSubcommand(ListFilesCommand.class)
-        .addSubcommand(DownloadFileCommand.class)
-        .addSubcommand(DownloadProjectCommand.class)
-        .execute(args);
+    new CommandLine(new CommandLineApp()).execute(args);
   }
 
   private JsonMapper jsonMapper() {
@@ -143,27 +145,19 @@ public class CommandLineApp {
   }
 
   private ApiClient buildApiClient() {
-    if (token != null) {
-      // legacy
-      ApiClient apiClient = new ApiClient();
-      apiClient.setBasePath(baseUrl);
-      apiClient.setBearerToken(token);
-      return apiClient;
-    } else {
-      JsonMapper jsonMapper = jsonMapper();
-      JwtCredential webModelerCredential = webModelerCredential();
-      JwtConfig jwtConfig = jwtConfig(webModelerCredential);
-      IdentityConfiguration identityConfiguration = identityConfiguration();
-      Identity identity = identity(identityConfiguration);
-      IdentityContainer identityContainer = identityContainer(identity, identityConfiguration);
-      IdentityConfig identityConfig = identityConfig(identityContainer);
-      return ApiClientFactory.getInstance()
-          .get(
-              new ApiClientConfiguration(
-                  baseUrl,
-                  new WebModelerAuthInterceptor(
-                      authentication(jsonMapper, jwtConfig, identityConfig))));
-    }
+    JsonMapper jsonMapper = jsonMapper();
+    JwtCredential webModelerCredential = webModelerCredential();
+    JwtConfig jwtConfig = jwtConfig(webModelerCredential);
+    IdentityConfiguration identityConfiguration = identityConfiguration();
+    Identity identity = identity(identityConfiguration);
+    IdentityContainer identityContainer = identityContainer(identity, identityConfiguration);
+    IdentityConfig identityConfig = identityConfig(identityContainer);
+    return ApiClientFactory.getInstance()
+        .get(
+            new ApiClientConfiguration(
+                baseUrl,
+                new WebModelerAuthInterceptor(
+                    authentication(jsonMapper, jwtConfig, identityConfig))));
   }
 
   protected CollaboratorsApi buildCollaboratorsClient() {
