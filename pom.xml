@@ -9,7 +9,7 @@
 
   <groupId>org.camunda.community.webmodeler</groupId>
   <artifactId>web-modeler-openapi-root</artifactId>
-  <version>1.1.0</version>
+  <version>1.1.1-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <licenses>
