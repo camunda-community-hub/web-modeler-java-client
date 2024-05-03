@@ -59,7 +59,7 @@
       <dependency>
         <groupId>io.camunda.spring</groupId>
         <artifactId>java-common</artifactId>
-        <version>8.5.1</version>
+        <version>8.5.2</version>
       </dependency>
       <dependency>
         <groupId>com.google.code.findbugs</groupId>
