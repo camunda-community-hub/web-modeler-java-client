@@ -1,4 +1,4 @@
-FROM openjdk:21
+FROM openjdk:25
 # install web modeler cli to a nice location
 WORKDIR /opt
 RUN mkdir web-modeler-cli
